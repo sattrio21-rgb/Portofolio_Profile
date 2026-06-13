@@ -1,7 +1,31 @@
 <x-layouts.portfolio title="Beranda">
 
+    {{-- Header Navigation --}}
+    <header class="sticky top-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6 sm:px-8">
+            <nav class="flex items-center justify-end h-14" style="gap: 2rem;">
+                <a href="#profil"
+                   class="text-sm font-medium transition-colors duration-200 text-gray-500 hover:text-white">
+                    Profil
+                </a>
+                <a href="#pendidikan"
+                   class="text-sm font-medium transition-colors duration-200 text-gray-500 hover:text-white">
+                    Pendidikan
+                </a>
+                <a href="#pengalaman"
+                   class="text-sm font-medium transition-colors duration-200 text-gray-500 hover:text-white">
+                    Pengalaman
+                </a>
+                <a href="#project"
+                   class="text-sm font-medium transition-colors duration-200 text-gray-500 hover:text-white">
+                    Project
+                </a>
+            </nav>
+        </div>
+    </header>
+
     {{-- Hero Section --}}
-    <section class="min-h-[85vh] flex items-center">
+    <section id="profil" class="min-h-[85vh] flex items-center">
         <div class="max-w-6xl mx-auto px-6 sm:px-8 w-full">
             <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
@@ -75,8 +99,33 @@
         </div>
     </section>
 
+    {{-- Latar Belakang Pendidikan Section --}}
+    @if($pendidikans->count() > 0)
+    <section id="pendidikan" class="py-20">
+        <div class="max-w-6xl mx-auto px-6 sm:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-3">Latar Belakang <span class="text-emerald-400">Pendidikan.</span></h2>
+                <p class="text-gray-500">Riwayat pendidikan yang telah saya tempuh.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                @foreach($pendidikans as $item)
+                    <div class="bg-white/[0.03] border border-white/10 rounded-2xl p-6 hover:border-emerald-500/30 transition-all duration-300">
+                        <span class="text-emerald-400 text-sm font-medium">{{ $item->tahun_mulai }} — {{ $item->tahun_selesai ?? 'Sekarang' }}</span>
+                        <h3 class="text-xl font-bold text-white mt-2">{{ $item->jurusan }}</h3>
+                        <p class="text-gray-400 text-sm mt-1">{{ $item->nama_institusi }}</p>
+                        @if($item->deskripsi)
+                            <p class="text-gray-500 text-sm mt-4 leading-relaxed">{{ $item->deskripsi }}</p>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
     {{-- Pengalaman Section --}}
-    <section class="py-20">
+    <section id="pengalaman" class="py-20">
         <div class="max-w-6xl mx-auto px-6 sm:px-8">
             {{-- Header --}}
             <div class="text-center mb-12">
@@ -161,7 +210,7 @@
 
     {{-- Project Section --}}
     @if($projects->count() > 0)
-    <section class="py-20">
+    <section id="project" class="py-20">
         <div class="max-w-6xl mx-auto px-6 sm:px-8">
             <div class="flex items-center justify-between mb-12">
                 <div>

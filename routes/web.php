@@ -23,6 +23,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/edit-profil', [PortfolioController::class, 'editProfil'])->name('edit-profil');
     Route::put('/edit-profil', [PortfolioController::class, 'updateProfile'])->name('edit-profil.update');
 
+    // Edit Pendidikan
+    Route::get('/edit-pendidikan', [PortfolioController::class, 'editPendidikan'])->name('edit-pendidikan');
+    Route::post('/edit-pendidikan', [PortfolioController::class, 'storePendidikan'])->name('edit-pendidikan.store');
+    Route::put('/edit-pendidikan/{pendidikan}', [PortfolioController::class, 'updatePendidikan'])->name('edit-pendidikan.update');
+    Route::delete('/edit-pendidikan/{pendidikan}', [PortfolioController::class, 'destroyPendidikan'])->name('edit-pendidikan.destroy');
+
     // Edit Pengalaman
     Route::get('/edit-pengalaman', [PortfolioController::class, 'editPengalaman'])->name('edit-pengalaman');
     Route::put('/edit-pengalaman/foto-organisasi', [PortfolioController::class, 'updateFotoOrganisasi'])->name('edit-pengalaman.foto-organisasi.update');

@@ -7,24 +7,21 @@ use Illuminate\Http\Request;
 use App\Models\Profile;
 use App\Models\Pengalaman;
 use App\Models\Project;
+use App\Models\Pendidikan;
 
 class PortfolioController extends Controller
 {
-    /**
-     * Halaman Edit Profil.
-     */
+    // ==================== PROFIL ====================
+
     public function editProfil()
     {
         $profile = Profile::first() ?? new Profile();
         return view('admin.profil.edit', compact('profile'));
     }
 
-    /**
-     * Update profile information.
-     */
     public function updateProfile(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'email' => 'nullable|email|max:255',
@@ -36,32 +33,59 @@ class PortfolioController extends Controller
         ]);
 
         $profile = Profile::first() ?? new Profile();
-
-        if ($request->hasFile('foto')) {
-            if ($profile->foto) {
-                \Storage::disk('public')->delete($profile->foto);
-            }
-            $path = $request->file('foto')->store('foto-profile', 'public');
-            $profile->foto = $path;
-        }
-
-        $profile->fill($request->only([
-            'nama',
-            'deskripsi',
-            'email',
-            'no_hp',
-            'instagram',
-            'linkedin',
-            'github',
-        ]));
+        $profile->foto = $this->uploadFile($request, 'foto', 'foto-profile', $profile->foto);
+        $profile->fill($validated);
         $profile->save();
 
         return redirect()->route('admin.edit-profil')->with('success', 'Profil berhasil diperbarui!');
     }
 
-    /**
-     * Halaman Edit Pengalaman.
-     */
+    // ==================== PENDIDIKAN ====================
+
+    public function editPendidikan()
+    {
+        $pendidikans = Pendidikan::orderBy('tahun_mulai', 'asc')->get();
+        return view('admin.pendidikan.edit', compact('pendidikans'));
+    }
+
+    public function storePendidikan(Request $request)
+    {
+        $validated = $request->validate([
+            'nama_institusi' => 'required|string|max:255',
+            'jurusan' => 'required|string|max:255',
+            'tahun_mulai' => 'required|string|max:20',
+            'tahun_selesai' => 'nullable|string|max:20',
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        Pendidikan::create($validated);
+
+        return redirect()->route('admin.edit-pendidikan')->with('success', 'Pendidikan berhasil ditambahkan!');
+    }
+
+    public function updatePendidikan(Request $request, Pendidikan $pendidikan)
+    {
+        $validated = $request->validate([
+            'nama_institusi' => 'required|string|max:255',
+            'jurusan' => 'required|string|max:255',
+            'tahun_mulai' => 'required|string|max:20',
+            'tahun_selesai' => 'nullable|string|max:20',
+            'deskripsi' => 'nullable|string',
+        ]);
+
+        $pendidikan->update($validated);
+
+        return redirect()->route('admin.edit-pendidikan')->with('success', 'Pendidikan berhasil diperbarui!');
+    }
+
+    public function destroyPendidikan(Pendidikan $pendidikan)
+    {
+        $pendidikan->delete();
+        return redirect()->route('admin.edit-pendidikan')->with('success', 'Pendidikan berhasil dihapus!');
+    }
+
+    // ==================== PENGALAMAN ====================
+
     public function editPengalaman()
     {
         $profile = Profile::first() ?? new Profile();
@@ -69,9 +93,6 @@ class PortfolioController extends Controller
         return view('admin.pengalaman.edit', compact('profile', 'pengalamans'));
     }
 
-    /**
-     * Update foto organisasi (HIMA & BEM).
-     */
     public function updateFotoOrganisasi(Request $request)
     {
         $request->validate([
@@ -84,40 +105,17 @@ class PortfolioController extends Controller
         ]);
 
         $profile = Profile::first() ?? new Profile();
-
-        if ($request->hasFile('foto_hima')) {
-            if ($profile->foto_hima) {
-                \Storage::disk('public')->delete($profile->foto_hima);
-            }
-            $path = $request->file('foto_hima')->store('foto-organisasi', 'public');
-            $profile->foto_hima = $path;
-        }
-
-        if ($request->hasFile('foto_bem')) {
-            if ($profile->foto_bem) {
-                \Storage::disk('public')->delete($profile->foto_bem);
-            }
-            $path = $request->file('foto_bem')->store('foto-organisasi', 'public');
-            $profile->foto_bem = $path;
-        }
-
-        $profile->fill($request->only([
-            'judul_hima',
-            'deskripsi_hima',
-            'judul_bem',
-            'deskripsi_bem',
-        ]));
+        $profile->foto_hima = $this->uploadFile($request, 'foto_hima', 'foto-organisasi', $profile->foto_hima);
+        $profile->foto_bem = $this->uploadFile($request, 'foto_bem', 'foto-organisasi', $profile->foto_bem);
+        $profile->fill($request->only(['judul_hima', 'deskripsi_hima', 'judul_bem', 'deskripsi_bem']));
         $profile->save();
 
         return redirect()->route('admin.edit-pengalaman')->with('success', 'Foto organisasi berhasil diperbarui!');
     }
 
-    /**
-     * Store new pengalaman.
-     */
     public function storePengalaman(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama_organisasi' => 'required|string|max:255',
             'jabatan' => 'required|string|max:255',
             'kategori' => 'required|in:hima,bem',
@@ -127,30 +125,15 @@ class PortfolioController extends Controller
             'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $data = $request->only([
-            'nama_organisasi',
-            'jabatan',
-            'kategori',
-            'tanggal_mulai',
-            'tanggal_selesai',
-            'deskripsi',
-        ]);
-
-        if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('foto-pengalaman', 'public');
-        }
-
-        Pengalaman::create($data);
+        $validated['foto'] = $this->uploadFile($request, 'foto', 'foto-pengalaman');
+        Pengalaman::create($validated);
 
         return redirect()->route('admin.edit-pengalaman')->with('success', 'Pengalaman berhasil ditambahkan!');
     }
 
-    /**
-     * Update existing pengalaman.
-     */
     public function updatePengalaman(Request $request, Pengalaman $pengalaman)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama_organisasi' => 'required|string|max:255',
             'jabatan' => 'required|string|max:255',
             'kategori' => 'required|in:hima,bem',
@@ -160,56 +143,33 @@ class PortfolioController extends Controller
             'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $data = $request->only([
-            'nama_organisasi',
-            'jabatan',
-            'kategori',
-            'tanggal_mulai',
-            'tanggal_selesai',
-            'deskripsi',
-        ]);
-
-        if ($request->hasFile('foto')) {
-            if ($pengalaman->foto) {
-                \Storage::disk('public')->delete($pengalaman->foto);
-            }
-            $data['foto'] = $request->file('foto')->store('foto-pengalaman', 'public');
-        }
-
-        $pengalaman->update($data);
+        $validated['foto'] = $this->uploadFile($request, 'foto', 'foto-pengalaman', $pengalaman->foto);
+        $pengalaman->update($validated);
 
         return redirect()->route('admin.edit-pengalaman')->with('success', 'Pengalaman berhasil diperbarui!');
     }
 
-    /**
-     * Delete pengalaman.
-     */
     public function destroyPengalaman(Pengalaman $pengalaman)
     {
         if ($pengalaman->foto) {
             \Storage::disk('public')->delete($pengalaman->foto);
         }
-
         $pengalaman->delete();
 
         return redirect()->route('admin.edit-pengalaman')->with('success', 'Pengalaman berhasil dihapus!');
     }
 
-    /**
-     * Halaman Edit Project.
-     */
+    // ==================== PROJECT ====================
+
     public function editProject()
     {
         $projects = Project::orderBy('created_at', 'desc')->get();
         return view('admin.project.edit', compact('projects'));
     }
 
-    /**
-     * Store new project.
-     */
     public function storeProject(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -218,32 +178,16 @@ class PortfolioController extends Controller
             'teknologi' => 'nullable|string',
         ]);
 
-        $data = $request->only([
-            'judul',
-            'deskripsi',
-            'link_github',
-            'link_demo',
-        ]);
-
-        if ($request->filled('teknologi')) {
-            $data['teknologi'] = array_map('trim', explode(',', $request->teknologi));
-        }
-
-        if ($request->hasFile('gambar')) {
-            $data['gambar'] = $request->file('gambar')->store('gambar-project', 'public');
-        }
-
-        Project::create($data);
+        $validated['teknologi'] = $this->parseTeknologi($request->teknologi);
+        $validated['gambar'] = $this->uploadFile($request, 'gambar', 'gambar-project');
+        Project::create($validated);
 
         return redirect()->route('admin.edit-project')->with('success', 'Project berhasil ditambahkan!');
     }
 
-    /**
-     * Update existing project.
-     */
     public function updateProject(Request $request, Project $project)
     {
-        $request->validate([
+        $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -252,40 +196,44 @@ class PortfolioController extends Controller
             'teknologi' => 'nullable|string',
         ]);
 
-        $data = $request->only([
-            'judul',
-            'deskripsi',
-            'link_github',
-            'link_demo',
-        ]);
-
-        if ($request->filled('teknologi')) {
-            $data['teknologi'] = array_map('trim', explode(',', $request->teknologi));
-        }
-
-        if ($request->hasFile('gambar')) {
-            if ($project->gambar) {
-                \Storage::disk('public')->delete($project->gambar);
-            }
-            $data['gambar'] = $request->file('gambar')->store('gambar-project', 'public');
-        }
-
-        $project->update($data);
+        $validated['teknologi'] = $this->parseTeknologi($request->teknologi);
+        $validated['gambar'] = $this->uploadFile($request, 'gambar', 'gambar-project', $project->gambar);
+        $project->update($validated);
 
         return redirect()->route('admin.edit-project')->with('success', 'Project berhasil diperbarui!');
     }
 
-    /**
-     * Delete project.
-     */
     public function destroyProject(Project $project)
     {
         if ($project->gambar) {
             \Storage::disk('public')->delete($project->gambar);
         }
-
         $project->delete();
 
         return redirect()->route('admin.edit-project')->with('success', 'Project berhasil dihapus!');
+    }
+
+    // ==================== HELPERS ====================
+
+    private function uploadFile(Request $request, string $fieldName, string $directory, ?string $oldFile = null): ?string
+    {
+        if (!$request->hasFile($fieldName)) {
+            return $oldFile;
+        }
+
+        if ($oldFile) {
+            \Storage::disk('public')->delete($oldFile);
+        }
+
+        return $request->file($fieldName)->store($directory, 'public');
+    }
+
+    private function parseTeknologi(?string $teknologi): ?array
+    {
+        if (!$teknologi) {
+            return null;
+        }
+
+        return array_map('trim', explode(',', $teknologi));
     }
 }
