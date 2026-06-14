@@ -101,7 +101,7 @@
                 <div class="space-y-4">
                     <div class="grid sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Organisasi</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Proker</label>
                             <input type="text" name="nama_organisasi" required placeholder="Contoh: Himpunan Mahasiswa"
                                    class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
@@ -117,18 +117,6 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1.5">Jabatan</label>
                             <input type="text" name="jabatan" required placeholder="Contoh: Ketua Divisi"
-                                   class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Tanggal Mulai</label>
-                            <input type="date" name="tanggal_mulai" required
-                                   class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                    </div>
-                    <div class="grid sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Tanggal Selesai <span class="text-gray-400 font-normal">(opsional)</span></label>
-                            <input type="date" name="tanggal_selesai"
                                    class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         <div>
@@ -202,7 +190,7 @@
                             <div class="space-y-4">
                                 <div class="grid sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Organisasi</label>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Proker</label>
                                         <input type="text" name="nama_organisasi" value="{{ $item->nama_organisasi }}" required
                                                class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500">
                                     </div>
@@ -218,18 +206,6 @@
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Jabatan</label>
                                         <input type="text" name="jabatan" value="{{ $item->jabatan }}" required
-                                               class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Tanggal Mulai</label>
-                                        <input type="date" name="tanggal_mulai" value="{{ $item->tanggal_mulai?->format('Y-m-d') }}" required
-                                               class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500">
-                                    </div>
-                                </div>
-                                <div class="grid sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Tanggal Selesai</label>
-                                        <input type="date" name="tanggal_selesai" value="{{ $item->tanggal_selesai?->format('Y-m-d') }}"
                                                class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500">
                                     </div>
                                     <div>

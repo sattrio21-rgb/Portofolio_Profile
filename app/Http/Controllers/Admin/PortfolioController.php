@@ -119,8 +119,6 @@ class PortfolioController extends Controller
             'nama_organisasi' => 'required|string|max:255',
             'jabatan' => 'required|string|max:255',
             'kategori' => 'required|in:hima,bem',
-            'tanggal_mulai' => 'required|date',
-            'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
             'deskripsi' => 'nullable|string',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
@@ -137,8 +135,6 @@ class PortfolioController extends Controller
             'nama_organisasi' => 'required|string|max:255',
             'jabatan' => 'required|string|max:255',
             'kategori' => 'required|in:hima,bem',
-            'tanggal_mulai' => 'required|date',
-            'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
             'deskripsi' => 'nullable|string',
             'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
