@@ -8,16 +8,9 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                     Kembali
                 </a>
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
-                        <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-4xl sm:text-5xl font-bold text-white">{{ $profile->judul_hima ?? 'HIMA' }}</h1>
-                        <p class="text-lg text-gray-400">{{ $profile->deskripsi_hima ?? 'Himpunan Mahasiswa Informatika' }}</p>
-                    </div>
+                <div class="mb-4">
+                    <h1 class="text-4xl sm:text-5xl font-bold text-white">{{ $profile->judul_hima ?? 'Ketua Departemen Kreativitas dan Olahraga' }}</h1>
+                    <p class="text-lg text-gray-400">{{ $profile->deskripsi_hima ?? 'Himpunan Mahasiswa Teknologi Informasi' }}</p>
                 </div>
             </div>
         </div>
